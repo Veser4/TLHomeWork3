@@ -1,0 +1,122 @@
+--CREATE
+create table Class (
+	ClassId int identity(1, 1) not null constraint PK_Class primary key,
+	Name nvarchar(50) not null
+)
+
+create table Race (
+	RaceId int identity(1, 1) not null constraint PK_Race primary key,
+	Name nvarchar(50) not null
+)
+
+create table Feature (
+	FeatureId int identity(1, 1) not null constraint PK_Feature primary key,
+	Intelligence int not null,
+	Agility int not null,
+	Strength int not null
+)
+
+create table Hero (
+	HeroId int identity(1, 1) not null constraint PK_Hero primary key,
+	FirstName nvarchar(50) not null,
+	LastName nvarchar(50) not null,
+	FeatureId int constraint FK_Hero_Feature references Feature(FeatureId),
+	ClassId int not null constraint FK_Hero_Class references Class(ClassId),
+	RaceId int not null constraint FK_Hero_Race references Race(RaceId)
+)
+
+Create table Thing(
+	ThingId int identity(1, 1) not null constraint PK_Thing primary key,
+	Name nvarchar(50) not null,
+	Cost int not null,
+	HeroId int not null constraint FK_Thing_Hero references Hero(HeroId),
+)
+
+--INSERT
+
+INSERT into [dbo].[Race] (Name)
+values
+	(N'Эльф'), (N'Гном'), (N'Человек'), (N'Ящер'),
+	(N'Гоблин'), (N'Троль'), (N'Дворф'), (N'Орк')
+
+INSERT into [dbo].[Class] (Name)
+values
+	(N'Воин'), (N'Лучник'), (N'Маг'), (N'Призыватель'),
+	(N'Вор'), (N'Паладин'), (N'Некромант'), (N'Варвар')
+
+INSERT into [dbo].[Hero] (FirstName, LastName, FeatureId, ClassId, RaceId)
+values
+	(N'Виктор', N'Глебов', 1, 7, 4), (N'Ридрих', N'Драконоборец', 2, 1, 5),
+	(N'Себилла', N'Брайт', 3, 3, 1), (N'Пат', N'Большеклык', 4, 8, 8)
+
+INSERT into [dbo].[Feature] (Intelligence, Agility, Strength)
+values 
+	(7, 8, 10), (10, 5, 4), (6, 10, 8), (3, 4, 11)
+
+INSERT into [dbo].[Thing] (Name, Cost, HeroId)
+values
+	(N'Меч', 300, 2), (N'Посох', 1100, 3),
+	(N'Жезл', 550, 1), (N'Топор', 420, 4),
+	(N'Шляпа мага', 200, 3), (N'Тяжёлая броня', 400, 4),
+	(N'Тяжёлая броня', 400, 2), (N'Накидка некроманта', 700, 1),
+	(N'Плащ мага', 1200, 3)
+
+--SELECT
+
+Select * from [dbo].[Hero]
+
+Select FirstName, LastName from [dbo].[Hero]
+
+Select FirstName, LastName, Name from [dbo].[Thing], [dbo].[Hero] Where Thing.HeroId = 2 AND Hero.HeroId = 2
+
+Select Name, Cost from [dbo].[Thing] Where Cost BETWEEN 500 AND 1000
+
+Select TOP 2 FirstName, LastName, Intelligence from [dbo].[Hero], [dbo].[Feature] 
+	WHERE Feature.FeatureId = Hero.FeatureId
+	ORDER BY Intelligence DESC
+
+Select TOP 1 * from [dbo].[Thing]
+
+Select * from [dbo].[Hero]
+	WHERE FirstName LIKE N'%и%'
+
+Select * from [dbo].[Feature]
+	ORDER BY Strength ASC
+
+Select HeroId, count(ThingId) as ThingsCount from [dbo].[Thing]
+	GROUP BY HeroId
+	HAVING count(ThingId) = 2
+
+--UPDATE
+
+UPDATE [dbo].[Hero] set RaceId = 1
+	Where HeroId = 4;
+
+
+UPDATE [dbo].[Feature] set Strength = 10
+	Where Strength BETWEEN 5 and 9
+
+
+UPDATE [dbo].[Hero] set FirstName = N'Реида'
+	Where FirstName = N'Себилла'
+
+--DELETE
+
+DELETE from [dbo].[Thing] Where ThingId = 2
+
+--JOIN 
+
+Select FirstName, LastName, Class.Name as ClassName, Race.Name as RaceName from Hero
+INNER JOIN Class on  Class.ClassId = Hero.ClassId
+INNER JOIN Race on  Race.RaceId = Hero.RaceId
+
+
+Select FirstName, LastName, Class.Name as ClassName, Race.Name as RaceName from Hero
+RIGHT JOIN Class on  Class.ClassId = Hero.ClassId
+RIGHT JOIN Race on  Race.RaceId = Hero.RaceId
+
+Select FirstName, LastName, Class.Name as ClassName, Race.Name as RaceName from Hero
+LEFT JOIN Class on  Class.ClassId = Hero.ClassId
+LEFT JOIN Race on  Race.RaceId = Hero.RaceId
+
+
