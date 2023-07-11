@@ -8,8 +8,8 @@ https://drive.google.com/file/d/11s0LsQ1bnlquiz9npMcLvslV853GYjsj/view?usp=shari
 База данных содержит информацию(таблицы) о герое, его характеристиках, расах, классах и предметах. 
 # Описание
 1. Герой(Hero):
-  1.1. Имя(FirstName)
-  2. Фамилия(LastName)
+  а. Имя(FirstName)
+  б. Фамилия(LastName)
   3. Характеристики(FeatureId)
   4. Класс(ClassId)
   5. Раса(Raceid)
